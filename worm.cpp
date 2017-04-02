@@ -1,16 +1,20 @@
 
 #include "worm.hpp"
-#include "WormPosition.hpp"
+#include "WormMovement.hpp"
+#include "WormGraphics.h"
+
 
 Worm::Worm()
 {
 	direction = LOOKRIGHT;
 }
-void Worm::updateWorm()          //se llama en respuesta a eventos de timer
+
+void Worm::update()	//se llama en respuesta a eventos de timer
 {
 	if(currentState == WALKING)
 	{
-//		position = updatePosition(); //esta función todavía no existe pero ya va a existir
+		movement->updatePosition(this); //de ser necesario. actualizar la posicion del worm
+		walkGraphic->drawImg(this);		//
 		//al_draw_bitmap(bitmap correspondiente a walking en el tick counter indicado, position)
 	}
 	else if(currentState == JUMPING)
@@ -40,4 +44,3 @@ int Worm::getDirection(){return direction;}
 wormState Worm::getCurrentState(){return currentState;}
 int Worm::getFrameCount(){return frameCount;}
 void Worm::setPosition(Point newPosition) {position = newPosition;}
-
