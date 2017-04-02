@@ -34,12 +34,15 @@ void tempworm::changedirection() {
 	direction = -direction;
 }
 void tempworm::moveworm() {
-	position.x += (direction*WALKINGX);
+	position.x += (direction*walkspeed);
 	
 }
 void tempworm::jumpworm() {
-	position.x += (direction*JUMPV*cos(PI / 3));
-	position.y = (JUMPV*sin(PI / 3)*framecount - framecount*framecount*G);
+	position.x += (direction*jumpspeed*cos(angle));
+	position.y = (jumpspeed*sin(angle)*framecount - framecount*framecount*gravity);
+	if (position.y <= 0) {
+		framecount = 0;
+	}
 }
 void tempworm::initjump() {
 	state = JUMPING;

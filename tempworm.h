@@ -18,6 +18,10 @@ class tempworm {
 	int direction;
 	int framecount;
 	int state;
+	double gravity;
+	double angle;
+	double jumpspeed;
+	double walkspeed;
 public:
 	tempworm() {
 		point start;
@@ -27,12 +31,20 @@ public:
 		direction = RIGHT;
 		framecount = 0;
 		state = STILL;
+		gravity = G;
+		angle = ANG;
+		jumpspeed = JUMPV;
+		walkspeed = WALKINGX;
 	}
 	tempworm(point start) {
 		position = start;
 		direction = RIGHT;
 		framecount = 0;
 		state = STILL;
+		gravity = G;
+		angle = ANG;
+		jumpspeed = JUMPV;
+		walkspeed = WALKINGX;
 	}
 	tempworm(double _x, double _y) {
 		position.x = _x;
@@ -40,6 +52,21 @@ public:
 		direction = RIGHT;
 		framecount = 0;
 		state = STILL;
+		gravity = G;
+		angle = ANG;
+		jumpspeed = JUMPV;
+		walkspeed = WALKINGX;
+	}
+	tempworm(double m, double n,int dir, double gr,double alfa,double js, double ws) {
+		position.x = m;
+		position.y = n;
+		direction = RIGHT;
+		framecount = 0;
+		state = STILL;
+		gravity = gr;
+		angle = alfa;
+		jumpspeed = js;
+		walkspeed = ws;
 	}
 	void setposition(point p); //setters
 	void setdirection(int b);
