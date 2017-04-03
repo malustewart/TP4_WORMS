@@ -1,7 +1,11 @@
+
 #include <cstdlib>
 #include <iostream>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_acodec.h> //no
+#include <allegro5/allegro_primitives.h> //
+
 
 using namespace std;
 
@@ -16,6 +20,7 @@ void newEvent(Worm& w1, Worm& w2, Display& display,ALLEGRO_EVENT ev);
 
 int main(int argc, char** argv) 
 {
+	printf("checkpoint1 \n");		//BORRAR LINEA
 	Display bg;
 	if(!bg.isValid())	//si hubo error en la inicializacion del display, indicarlo y salir del programa
 	{
@@ -25,6 +30,8 @@ int main(int argc, char** argv)
 	
 	imgID loadedImgID;
 	unsigned int fileCount;
+
+	///////////// INFO PARA CAMINAR
 
 	//cargar la info necesaria para dibujar al worm caminando en la estructura correspondiente
 	graphInfo_t walk;		//guarda la informacion
@@ -38,7 +45,8 @@ int main(int argc, char** argv)
 	fileCount = elementCount(walkImgFiles);	//obtener el numero de imagenes necesarias
 
 	loadedImgID = 1;	//darle un valor distinto de cero ya que en cero indica error
-	for( int i = 0; i < fileCount && loadedImgID; ++i)	//cargar todas las imagenes siempre que no haya error
+
+	for(unsigned int i = 0; i < fileCount && loadedImgID; ++i)	//cargar todas las imagenes siempre que no haya error
 		loadedImgID = loadImg(walk, walkImgFiles[i]);	//si hay error, loadImg devuelve cero
 	if (!loadedImgID)	//indicar que hubo error y salir del programa
 	{
@@ -46,27 +54,28 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	imgID walkImgOrder[] = {
+	imgID walkImgOrder[] = {						
 						//4,4,4,4,4,1,2,3,
 						//4,4,4,4,4,3,2,3,
 						4,4,4,4,4,3,3,3,
 						//4,4,4,4,4,2,3,3,
 						4,5,6,7,8,9,10,11,11,12,13,14,15,4,
 						4,5,6,7,8,9,10,11,11,12,13,14,15,4,
-						4,5,6,7,8,9,10,11,11,12,13,14,15,4,};
+						4,5,6,7,8,9,10,11,11,12,13,14,15,4};
 
 
-	//repetir para las imagenes del salto
+	///////////// INFO PARA SALTO
+
 	graphInfo_t jump;
 	jump.nextImgPosition = 1;
 
-	string jumpImgFiles[] = {"wF1.png", "wF2.png", "wF3.png", "wF4.png", "wF5.png", 
-	"wF6.png", "wF7.png", "wF8.png", "wF9.png", "wF10.png", "wF11.png", "wF12.png", 
-	"wF13.png", "wF14.png", "wF15.png", 
+	string jumpImgFiles[] = {"jF1.png", "jF2.png", "jF3.png", "jF4.png", "jF5.png", 
+	"jF6.png", "jF7.png", "jF8.png", "jF9.png", "jF10.png", "jF11.png", "jF12.png", 
+	"jF13.png", "jF14.png", "jF15.png", 
 	};
 
 	fileCount = elementCount(jumpImgFiles);
-	for(int i = 0; i < fileCount && loadedImgID; ++i)
+	for(unsigned int i = 0; i < fileCount && loadedImgID; ++i)
 		loadedImgID = loadImg(jump, jumpImgFiles[i]);
 	if (!loadedImgID)
 	{
@@ -74,17 +83,15 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	imgID jumpImgOrder[] = {
-						//4,4,4,4,4,1,2,3,
-						//4,4,4,4,4,3,2,3,
-						4,4,4,4,4,3,3,3,
-						//4,4,4,4,4,2,3,3,
-						4,5,6,7,8,9,10,11,11,12,13,14,15,4,
-						4,5,6,7,8,9,10,11,11,12,13,14,15,4,
-						4,5,6,7,8,9,10,11,11,12,13,14,15,4,};
+	imgID jumpImgOrder [] {	8,9,10,9,8,						//Envión, se agacha
+							7,1,2,3,4,5,6,7,8,9,10,			//Salto, en el aire
+							9,8,7,1};						//en el piso denuevo, se agacha
 
 	
+	//////// WORMS DEL JUEGO
+
 	Worm w1(walk, jump, XMIN, LOOKRIGHT), w2(walk, jump, XMAX, LOOKLEFT);
+
 	if(!w1.isValid())
 	{
 		cout << "Error en la inicializacion del worm 1." << endl;
@@ -96,6 +103,8 @@ int main(int argc, char** argv)
 		return -1;
 	}
 	
+	/////////// COLA DE EVENTOS - TECLADO - TIMER
+
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
 
@@ -119,12 +128,15 @@ int main(int argc, char** argv)
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
 //	al_register_event_source(event_queue, al_get_display_event_source(display)); //PARA HACER: HACER ANDAR ESTO
 
+	
 	al_start_timer(timer);
 
 	ALLEGRO_EVENT ev;
 
+	////////////////////// LOGICA
 	do
 	{
+		printf("checkpoint2 \n");		//BORRAR LINEA
 		if(!al_is_event_queue_empty(event_queue))
 		{
 			al_get_next_event(event_queue, &ev);
@@ -138,8 +150,7 @@ int main(int argc, char** argv)
 
 	return 0;
 
-	//destruir allegro y toda la giladah
-	
+	//destruir allegro y toda la giladah	
 }
 
 //carga la imagen en memoria y guarda el puntero a dicha imagen en el arreglo correspodiente
@@ -152,9 +163,17 @@ imgID loadImg(graphInfo_t& graph, string fileName)
 //recibe un arreglo y devuelve la cantidad de elementos dentro del arreglo
 unsigned int elementCount(string array[])
 {
-	return 15;								//PARA HACER: hacer andar esta funcion
+	unsigned int i;
+	for (i = 0; array[i] == "\0"; i++)
+	{
+		printf("cantidad = %u", (i + 1)); //esta linea es de prueba. se BORRA
+	}
+	return i+1;								
 }
 
+
+
+///////////////////////////////////// newEvent //////////////////////////////////
 
 void newEvent( Worm& w1, Worm& w2, Display& display, ALLEGRO_EVENT ev )
 {

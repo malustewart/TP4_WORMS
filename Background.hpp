@@ -10,9 +10,10 @@
 #include <allegro5/allegro_color.h>
 #include <allegro5/allegro_image.h>
 
+
 #define FLOORY 616		//coordenada Y del piso donde se apoyan los worms
-#define XMIN 701		//borde izquierdo de donde se mueven los worms
-#define XMAX 1212		//borde derecho de donde se mueven los worms
+#define XMIN 701.0		//borde izquierdo de donde se mueven los worms
+#define XMAX 1212.0		//borde derecho de donde se mueven los worms
 #define BGWIDTH 1300	//ancho imagen de fondo	PARA HACER: ,conseguir los valores correctos que estos los invente
 #define BGHEIGHT 800	//altura imagen de fondo
 

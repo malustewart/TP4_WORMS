@@ -1,7 +1,15 @@
+
 #include "Worm.h"
 
 
-Worm::Worm (graphInfo_t wGraph, graphInfo_t jGraph, float x0, int dir, movingInfo_t mov)
+
+//////////////////////////////////// Worm::Worm //////////////////////////////////////
+//
+// Constructor para un worm.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
+Worm::Worm (graphInfo_t wGraph, graphInfo_t jGraph, double x0, int dir, movingInfo_t mov)
 {
 	if((dir != LOOKLEFT && dir != LOOKRIGHT) || x0 < XMIN || XMAX < x0)
 		valid = false;	//si hubo algun error en los parametros recibidos, indicarlo en valid
@@ -16,6 +24,14 @@ Worm::Worm (graphInfo_t wGraph, graphInfo_t jGraph, float x0, int dir, movingInf
 		position.setX(x0);
 	}
 }
+
+
+/////////////////////////////// Worm::calcNewState ///////////////////////////////////
+//
+// Una vez que llega un evento del teclado, se llama a esta funcion. Actualiza la 
+// información de un worm que debe ser modificada de acuerdo al evento recibido.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 void Worm::calcNewState(userAction_t action)
 {
@@ -37,48 +53,103 @@ void Worm::calcNewState(userAction_t action)
 			break;
 		case LEFT_RELEASED:
 			if (currentState == WALKING_PENDING && direction == LOOKLEFT)
-				currentState == STILL;
+				currentState = STILL;
 			direction =  LOOKLEFT;
 			break;
 		case UP_RELEASED:
 			if (currentState == WALKING_PENDING && direction == LOOKLEFT)
-				currentState == STILL;
+				currentState = STILL;
 			direction =  LOOKLEFT;
 			break;
 		case RIGHT_RELEASED:
 			break;
+		default: break;
 	}
 }
 
-void Worm::update()
+//////////////////////////////////// Worm::update ////////////////////////////////////
+//
+// Una vez que llega un evento del timer, se llama a esta funcion. Actualiza la 
+// información de un worm que debe ser modificada luego de transcurrido un frame.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
+void Worm::update() 
 {
 	if (currentState != STILL)
-		tickCounter++;			//aumentar el tickCounter cada vez que se reciba un evento de timer
-	if (tickCounter == 10 && currentState == WALKING_PENDING)
+		tickCounter++;			//Aumentar el tickCounter cada vez que se reciba un evento de timer
+
+	switch (currentState)
 	{
-		currentState == WALKING;
-		int a;
-		printf("rwrae");
-		int b;
+	case WALKING_PENDING:
+	{
+		if (tickCounter >= 5)
+		{
+			currentState = WALKING;
+		}
+	} break;
+
+	case WALKING:
+	{
+		if (tickCounter >= 49)
+		{
+			currentState = FINISHING_WALKING;
+		}
+		else move();
+	} break;
+
+	case JUMPING:
+	{
+		if (tickCounter >= 19)
+		{
+			currentState = FINISHING_JUMPING;
+		}
+		else move();
+	} break;
+
+	case FINISHING_WALKING: case FINISHING_JUMPING:
+	{
+		move();
+		currentState = STILL;
+		tickCounter = 0;
+	} break;
+
+	default: break;
 	}
-	if (currentState == WALKING || currentState == JUMPING)
-		move();	
+
 	draw();
 }
+
+
+
+////////////////////////////////// Worm::move ////////////////////////////////////////
+//
+// Se calcula la nueva posicion de un worm, de acuerdo a su estado.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 void Worm::move()
 {
 	if(currentState == WALKING)
 	{
-		if(!((tickCounter-6)%14) && tickCounter>8)	//nueva posicion del gusano
-			position.setX(position.getX()+direction*9);	//para la derecha se suma, para la izquierda se resta
+		if(!((tickCounter-6)%14) && tickCounter>8)			//nueva posicion del gusano
+			position.setX(position.getX()+direction*9);		//para la derecha se suma, para la izquierda se resta
 	}
 	else if(currentState = JUMPING)	
 	{
-		position.setX(position.getX()(direction*movement.jumpV0*cos(movement.jumpAngle)));
+		position.setX(position.getX()+(direction*movement.jumpV0*cos(movement.jumpAngle))); //ver el +
 		position.setY(movement.jumpV0*sin(movement.jumpAngle)*tickCounter - tickCounter*tickCounter*movement.gravity);
 	}
 }
+
+
+
+/////////////////////////////////// Worm::draw ///////////////////////////////////////
+//
+// Dibuja en pantalla la imagen que corresponde al movimiento actual de un worm, en 
+// la posicion correcta.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 void Worm::draw()
 {	
@@ -93,9 +164,15 @@ void Worm::draw()
 	
 	//dibujar, dependiendo de la direccion, se pone en 0 o en 1 la flag para invertir horizontalmente la imagen
 	al_draw_bitmap(currentImg, position.getX(), position.getY(), direction == LOOKLEFT ? 0 : 1);
-//	tickCounter++;
+	//	tickCounter++;
 }
 
+
+//////////////////////////////////// Worm::isValid ///////////////////////////////////
+//
+// Verifica la creacion de un worm.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 bool Worm::isValid()
 {
 	return valid;

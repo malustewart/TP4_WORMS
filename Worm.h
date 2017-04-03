@@ -1,3 +1,4 @@
+
 #ifndef WORM_H
 #define WORM_H
 
@@ -5,21 +6,24 @@
 #include <allegro5/allegro_image.h>
 #include "Point.hpp"
 #include "Background.hpp"
+#include <math.h>
+#include <allegro5/allegro_acodec.h> //no
+#include <allegro5/allegro_primitives.h> //
 
-#define LOOKLEFT -1
-#define LOOKRIGHT 1
+#define LOOKLEFT -1.0
+#define LOOKRIGHT 1.0
 
 
 #define IMGSXMOVEMENT 50
-#define PI 3.14159
+#define PI 3.14159265358979323846 //usar, sino: M_PI de la libreria math.
 
 typedef unsigned int imgID;	
 
 typedef struct{	
-	float jumpV0;		//velocidad inicial del salto
-	float jumpAngle;	//angulo inicial del salto
-	float gravity;		//gravedad durante el salto
-	float walkingV0;	//velocidad inicial de la caminata
+	double jumpV0;		//velocidad inicial del salto
+	double jumpAngle;	//angulo inicial del salto
+	double gravity;		//gravedad durante el salto
+	double walkingV0;	//velocidad inicial de la caminata
 }movingInfo_t;
 
 typedef struct{
@@ -49,8 +53,9 @@ private:
 	void move();		//mueve el worm de acuerdo a la informacion que tenga
 	void draw();		//dibuja el worm de acuerdo a la informacion que tenga
 	
-public:
-	Worm (graphInfo_t wGraph, graphInfo_t jGraph, float X0 = (XMIN + XMAX)/2, int dir = LOOKRIGHT, movingInfo_t mov = {4.5, PI/3, 0.4, 27});
+public: 
+	//Worm(graphInfo_t wGraph, graphInfo_t jGraph, double x0, int dir, movingInfo_t mov);
+	Worm (graphInfo_t wGraph, graphInfo_t jGraph, double X0 = (XMIN + XMAX)/2, int dir = LOOKRIGHT, movingInfo_t mov = {4.5, PI/3, 0.4, 27});
 	void update();						//mueve y redibuja cada vez que se reciba un evento de timer
 	void calcNewState(userAction_t action);	//recalcula toda la informacion cada vez que se recibe un evento de teclado
 	bool isValid();						//indica si hubo error o no en su inicializacion
