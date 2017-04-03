@@ -74,7 +74,10 @@ void Worm::move()
 			position.setX(position.getX()+direction*9);	//para la derecha se suma, para la izquierda se resta
 	}
 	else if(currentState = JUMPING)	
-	{}
+	{
+		position.setX(position.getX()(direction*movement.jumpV0*cos(movement.jumpAngle)));
+		position.setY(movement.jumpV0*sin(movement.jumpAngle)*tickCounter - tickCounter*tickCounter*movement.gravity);
+	}
 }
 
 void Worm::draw()
