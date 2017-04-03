@@ -18,6 +18,13 @@ imgID loadImg(graphInfo_t& move, string fileName);
 unsigned int elementCount(string array[]);
 void newEvent(Worm& w1, Worm& w2, Display& display,ALLEGRO_EVENT ev);
 
+
+///////////////////////////////////////// main //////////////////////////////////////
+//
+// 
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 int main(int argc, char** argv) 
 {
 	printf("checkpoint1 \n");		//BORRAR LINEA
